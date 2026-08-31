@@ -9,9 +9,9 @@ Figma frames (Desktop/Mobile × Light/Dark) as **one** HTML document.
 | `ASSET_MIGRATION.md` | Asset inventory, verification status, and the outstanding to-do list. |
 | `README.md` | This file. |
 
-**Status:** structurally complete and asset-verified. Logo is live. Not yet shippable —
-the hero swap, every link destination, and the postal address are still outstanding.
-See [Before you send](#before-you-send).
+**Status:** structurally complete, asset-verified, and fully wired. One asset still to
+upload, plus a 404 on the referral landing page to resolve. See
+[Before you send](#before-you-send).
 
 ---
 
@@ -103,23 +103,18 @@ output, and a single shared social-icon set rather than per-mode copies.
 
 ## Before you send
 
-`Diaspora_Email.html` will not render correctly until these are replaced. Every one is
-marked with the reserved host `TODO-REPLACE.invalid` (RFC 2606 — it can never resolve,
-so a missed placeholder fails loudly instead of silently pointing somewhere real).
+Every placeholder is gone — logo, all 15 links, unsubscribe tags and postal address are
+wired. Three things remain:
 
-```bash
-grep -n "TODO-REPLACE" Diaspora_Email.html
-```
+1. **Upload `diaspora-hero-536x469.png`** to Cloudinary. The HTML already points at it,
+   so until it is uploaded the hero 404s.
+2. **`https://diaspora.mobi/referral` returns 404** — and it is the destination for both
+   primary CTAs. The domain resolves, so this is a real 404, not a blocked request.
+3. **Confirm the postal address.** `Delaware, USA` is a state and country, not a street
+   address, and may not satisfy CAN-SPAM.
 
-1. ~~**Logo lockup**~~ — done. Both lockups are uploaded and wired in.
-2. **Hero image** — upload the sharp export and repoint the `<img>`; the current source
-   is 272×297, effectively 1×.
-3. **Link destinations** — 5 social profiles (×2 locations), Open Diaspora,
-   Start Referring, unsubscribe, manage preferences.
-4. **Postal address** — required by CAN-SPAM and its international equivalents.
-
-`ASSET_MIGRATION.md` walks through all of it step by step, in order, with the exact
-find-and-replace strings. Budget about 15 minutes.
+`ASSET_MIGRATION.md` has the detail, including why the hero is a pre-sized file rather
+than a Cloudinary transform.
 
 ---
 

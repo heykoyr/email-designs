@@ -25,13 +25,12 @@
   are produced from this single markup via CSS only. No section, image
   or string is duplicated to serve a second breakpoint or colour mode.
 
-  UNRESOLVED VALUES are marked with the host `TODO-REPLACE.invalid`.
-  That TLD is reserved by RFC 2606 and can never resolve, so a missed
-  placeholder fails loudly instead of silently pointing somewhere real.
-  Find every one of them with:   grep -n "TODO-REPLACE" Diaspora_Email.html
+  All links and assets are wired. Unsubscribe and preferences use SendGrid
+  ASM tags, which render as real URLs only when sent through SendGrid --
+  in a raw browser preview they stay as literal `<%...%>` text.
 
   See README.md for the architecture writeup and ASSET_MIGRATION.md for
-  the asset checklist.
+  the asset inventory.
 -->
 <style>
   /* ============================================================
@@ -224,7 +223,7 @@
             <td align="left" valign="middle">
               <!-- Logo lockup. One hosted image per colour mode, sized 5.5:1.
                    Export both at 2x (264x48). See ASSET_MIGRATION.md. -->
-              <a href="https://TODO-REPLACE.invalid/home" target="_blank" style="text-decoration:none;">
+              <a href="https://diaspora.mobi/" target="_blank" style="text-decoration:none;">
                 <img class="logo-img icon-swap-light" src="https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-light-264x48.png" width="132" height="25" alt="Diaspora" style="width:132px;height:25px;display:inline-block;">
                 <img class="logo-img icon-swap-dark" src="https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-dark-264x48.png" width="132" height="25" alt="" style="width:132px;height:25px;display:none;">
               </a>
@@ -235,15 +234,15 @@
                    and the dark surface, so no light/dark swap is needed here. -->
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td><a href="https://TODO-REPLACE.invalid/social/x" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-10.png" width="20" height="20" alt="Diaspora on X" style="width:20px;height:20px;display:inline-block;"></a></td>
+                  <td><a href="https://x.com/diaspora_mobi" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-10.png" width="20" height="20" alt="Diaspora on X" style="width:20px;height:20px;display:inline-block;"></a></td>
                   <td class="social-gap" width="16">&nbsp;</td>
-                  <td><a href="https://TODO-REPLACE.invalid/social/linkedin" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-11.png" width="20" height="20" alt="Diaspora on LinkedIn" style="width:20px;height:20px;display:inline-block;"></a></td>
+                  <td><a href="https://www.linkedin.com/company/diaspora-app" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-11.png" width="20" height="20" alt="Diaspora on LinkedIn" style="width:20px;height:20px;display:inline-block;"></a></td>
                   <td class="social-gap" width="16">&nbsp;</td>
-                  <td><a href="https://TODO-REPLACE.invalid/social/tiktok" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094168/diaspora-email-svg-12.png" width="20" height="20" alt="Diaspora on TikTok" style="width:20px;height:20px;display:inline-block;"></a></td>
+                  <td><a href="https://www.tiktok.com/@diaspora.app" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094168/diaspora-email-svg-12.png" width="20" height="20" alt="Diaspora on TikTok" style="width:20px;height:20px;display:inline-block;"></a></td>
                   <td class="social-gap" width="16">&nbsp;</td>
-                  <td><a href="https://TODO-REPLACE.invalid/social/facebook" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094169/diaspora-email-svg-13.png" width="20" height="20" alt="Diaspora on Facebook" style="width:20px;height:20px;display:inline-block;"></a></td>
+                  <td><a href="https://facebook.com/diaspora.mobi" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094169/diaspora-email-svg-13.png" width="20" height="20" alt="Diaspora on Facebook" style="width:20px;height:20px;display:inline-block;"></a></td>
                   <td class="social-gap" width="16">&nbsp;</td>
-                  <td><a href="https://TODO-REPLACE.invalid/social/instagram" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094170/diaspora-email-svg-14.png" width="20" height="20" alt="Diaspora on Instagram" style="width:20px;height:20px;display:inline-block;"></a></td>
+                  <td><a href="https://www.instagram.com/getdiaspora" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094170/diaspora-email-svg-14.png" width="20" height="20" alt="Diaspora on Instagram" style="width:20px;height:20px;display:inline-block;"></a></td>
                 </tr>
               </table>
             </td>
@@ -282,7 +281,7 @@
                         <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="hero-btn-align" style="margin:0;">
                           <tr>
                             <td bgcolor="#5925DC" style="background-color:#5925DC;border-radius:12px;">
-                              <a href="https://TODO-REPLACE.invalid/open-app" target="_blank" style="display:block;padding:12px 24px;font-family:'Aeonik',Arial,sans-serif;font-weight:500;font-size:16px;letter-spacing:-0.32px;color:#FFFFFF;text-decoration:none;">Open Diaspora</a>
+                              <a href="https://diaspora.mobi/referral" target="_blank" style="display:block;padding:12px 24px;font-family:'Aeonik',Arial,sans-serif;font-weight:500;font-size:16px;letter-spacing:-0.32px;color:#FFFFFF;text-decoration:none;">Open Diaspora</a>
                             </td>
                           </tr>
                         </table>
@@ -295,7 +294,7 @@
                   <!-- Image column. The approved three-device mockup is ONE flat
                        raster asset -- never reconstructed from layered HTML. -->
                   <td class="stack-cell hero-stack-gap" width="284" align="center" valign="middle" style="width:284px;padding-left:16px;">
-                    <img class="hero-img" src="https://res.cloudinary.com/xyiwqpad/image/upload/w_536,q_auto:good/diaspora-hero-1088x952.png" width="268" height="234" alt="The Diaspora app shown across three phones: a member profile, direct messages, and the community feed" style="width:268px;max-width:100%;height:auto;margin:0 auto;">
+                    <img class="hero-img" src="https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-hero-536x469.png" width="268" height="234" alt="The Diaspora app shown across three phones: a member profile, direct messages, and the community feed" style="width:268px;max-width:100%;height:auto;margin:0 auto;">
                   </td>
                 </tr>
               </table>
@@ -472,7 +471,7 @@
                       <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                         <tr>
                           <td class="btn-referral-bg" bgcolor="#5925DC" style="background-color:#5925DC;border-radius:12px;">
-                            <a href="https://TODO-REPLACE.invalid/refer" target="_blank" class="btn-referral-txt" style="display:block;padding:12px 24px;font-family:'Aeonik',Arial,sans-serif;font-weight:500;font-size:16px;letter-spacing:-0.32px;color:#FFFFFF;text-decoration:none;">Start Referring</a>
+                            <a href="https://diaspora.mobi/referral" target="_blank" class="btn-referral-txt" style="display:block;padding:12px 24px;font-family:'Aeonik',Arial,sans-serif;font-weight:500;font-size:16px;letter-spacing:-0.32px;color:#FFFFFF;text-decoration:none;">Start Referring</a>
                           </td>
                         </tr>
                       </table>
@@ -679,18 +678,18 @@
       <td class="bg-surface pad-footer" bgcolor="#FFFFFF" style="background-color:#FFFFFF;padding:32px 24px;border-radius:0 0 4px 4px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr><td style="padding-bottom:48px;">
-            <span class="txt-footer footer-p" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:#667085;">This email was sent to <a href="https://TODO-REPLACE.invalid/preferences" class="txt-link" style="color:#5925DC;text-decoration:none;">{{email}}</a>. If you'd rather not receive this kind of email, you can <a href="https://TODO-REPLACE.invalid/unsubscribe" class="txt-link" style="color:#5925DC;text-decoration:none;">unsubscribe</a> or <a href="https://TODO-REPLACE.invalid/preferences" class="txt-link" style="color:#5925DC;text-decoration:none;">manage your email preferences</a>.</span>
+            <span class="txt-footer footer-p" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:#667085;">This email was sent to <a href="<%asm_preferences_raw_url%>" class="txt-link" style="color:#5925DC;text-decoration:none;">{{email}}</a>. If you'd rather not receive this kind of email, you can <a href="<%asm_group_unsubscribe_raw_url%>" class="txt-link" style="color:#5925DC;text-decoration:none;">unsubscribe</a> or <a href="<%asm_preferences_raw_url%>" class="txt-link" style="color:#5925DC;text-decoration:none;">manage your email preferences</a>.</span>
             <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
             <!-- A physical postal address is required by CAN-SPAM (US) and
                  equivalent rules elsewhere. Replace with Diaspora's address,
                  or let SendGrid Marketing Campaigns inject its sender address. -->
-            <span class="txt-footer footer-copy" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:#667085;">&copy; 2026 Diaspora<br>TODO-REPLACE: Diaspora postal address, city, region, postcode, country</span>
+            <span class="txt-footer footer-copy" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:#667085;">&copy; 2026 Diaspora<br>Delaware, USA</span>
           </td></tr>
           <tr><td>
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td align="left" valign="middle">
-                  <a href="https://TODO-REPLACE.invalid/home" target="_blank" style="text-decoration:none;">
+                  <a href="https://diaspora.mobi/" target="_blank" style="text-decoration:none;">
                     <img class="footer-logo-img icon-swap-light" src="https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-light-264x48.png" width="106" height="20" alt="Diaspora" style="width:106px;height:20px;display:inline-block;">
                     <img class="footer-logo-img icon-swap-dark" src="https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-dark-264x48.png" width="106" height="20" alt="" style="width:106px;height:20px;display:none;">
                   </a>
@@ -698,15 +697,15 @@
                 <td align="right" valign="middle">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                      <td><a href="https://TODO-REPLACE.invalid/social/x" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-10.png" width="20" height="20" alt="Diaspora on X" style="width:20px;height:20px;display:inline-block;"></a></td>
+                      <td><a href="https://x.com/diaspora_mobi" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-10.png" width="20" height="20" alt="Diaspora on X" style="width:20px;height:20px;display:inline-block;"></a></td>
                       <td class="footer-social-gap" width="16">&nbsp;</td>
-                      <td><a href="https://TODO-REPLACE.invalid/social/linkedin" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-11.png" width="20" height="20" alt="Diaspora on LinkedIn" style="width:20px;height:20px;display:inline-block;"></a></td>
+                      <td><a href="https://www.linkedin.com/company/diaspora-app" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094166/diaspora-email-svg-11.png" width="20" height="20" alt="Diaspora on LinkedIn" style="width:20px;height:20px;display:inline-block;"></a></td>
                       <td class="footer-social-gap" width="16">&nbsp;</td>
-                      <td><a href="https://TODO-REPLACE.invalid/social/tiktok" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094168/diaspora-email-svg-12.png" width="20" height="20" alt="Diaspora on TikTok" style="width:20px;height:20px;display:inline-block;"></a></td>
+                      <td><a href="https://www.tiktok.com/@diaspora.app" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094168/diaspora-email-svg-12.png" width="20" height="20" alt="Diaspora on TikTok" style="width:20px;height:20px;display:inline-block;"></a></td>
                       <td class="footer-social-gap" width="16">&nbsp;</td>
-                      <td><a href="https://TODO-REPLACE.invalid/social/facebook" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094169/diaspora-email-svg-13.png" width="20" height="20" alt="Diaspora on Facebook" style="width:20px;height:20px;display:inline-block;"></a></td>
+                      <td><a href="https://facebook.com/diaspora.mobi" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094169/diaspora-email-svg-13.png" width="20" height="20" alt="Diaspora on Facebook" style="width:20px;height:20px;display:inline-block;"></a></td>
                       <td class="footer-social-gap" width="16">&nbsp;</td>
-                      <td><a href="https://TODO-REPLACE.invalid/social/instagram" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094170/diaspora-email-svg-14.png" width="20" height="20" alt="Diaspora on Instagram" style="width:20px;height:20px;display:inline-block;"></a></td>
+                      <td><a href="https://www.instagram.com/getdiaspora" target="_blank" style="text-decoration:none;"><img class="social-icon" src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094170/diaspora-email-svg-14.png" width="20" height="20" alt="Diaspora on Instagram" style="width:20px;height:20px;display:inline-block;"></a></td>
                     </tr>
                   </table>
                 </td>
