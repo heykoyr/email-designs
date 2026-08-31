@@ -193,4 +193,4 @@ Broken references found and resolved:
 | Hero column widths | Declared `280 + 312 = 592px` inside a real **544px** content box | `260 + 284 = 544` |
 | 15 × `href="#"` | Dead links | Named `TODO-REPLACE.invalid` placeholders |
 | No postal address | CAN-SPAM exposure | Placeholder line added to footer |
-| `{{email}}` | A real personal address hardcoded in the footer of the **currently published** repo version | Replaced with the `{{email}}` token |
+| Hardcoded recipient address | A real email address was baked into the footer instead of a merge token, and had been published to this repo | Replaced with the `{{email}}` token; the original address is redacted here deliberately so this document does not reintroduce it |
