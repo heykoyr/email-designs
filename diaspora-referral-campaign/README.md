@@ -190,7 +190,20 @@ These are deliberate, and each is a cross-client reliability trade:
    restore the per-mode swap.
 4. **Typography.** Aeonik is not loaded as a webfont — an email should not depend on
    one. The stack falls back to Arial, so metrics differ slightly from the frames.
-5. **Square corners in Outlook desktop.** The Word engine ignores `border-radius`.
+5. **Purple headings in the Gmail apps' dark theme — accepted.** Gmail ignores
+   `prefers-color-scheme` and inverts the light design itself. Its inversion is
+   contrast-driven and size-aware: small text is lightened all the way to white, while
+   `<h1>` (32px) and `<h2>` (20px) only need the lower large-text contrast ratio, so they
+   stop at a light purple that preserves the source hue.
+
+   That output is computed from the light-mode value (`#2C0A84`) and there is no
+   dark-only hook to override it — the sole lever is the source colour, which light mode
+   shares. Desaturating the headings toward neutral would push Gmail's result closer to
+   white at the cost of the vivid brand purple in light mode. **Decision: keep the brand
+   purple.** The dark-mode result is legible and reads as intentional, and light mode is
+   the state every client renders correctly.
+
+6. **Square corners in Outlook desktop.** The Word engine ignores `border-radius`.
    Cards and buttons render square there. Accepted.
 
 ---
