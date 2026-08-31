@@ -9,8 +9,8 @@ Figma frames (Desktop/Mobile × Light/Dark) as **one** HTML document.
 | `ASSET_MIGRATION.md` | Asset inventory, verification status, and the outstanding to-do list. |
 | `README.md` | This file. |
 
-**Status:** structurally complete, asset-verified, and fully wired. One asset still to
-upload, plus a 404 on the referral landing page to resolve. See
+**Status:** complete and fully wired; all assets live and verified in both colour modes.
+One blocker remains — the referral landing page returns 404. See
 [Before you send](#before-you-send).
 
 ---
@@ -106,12 +106,13 @@ output, and a single shared social-icon set rather than per-mode copies.
 Every placeholder is gone — logo, all 15 links, unsubscribe tags and postal address are
 wired. Three things remain:
 
-1. **Upload `diaspora-hero-536x469.png`** to Cloudinary. The HTML already points at it,
-   so until it is uploaded the hero 404s.
-2. **`https://diaspora.mobi/referral` returns 404** — and it is the destination for both
+1. **`https://diaspora.mobi/referral` returns 404** — and it is the destination for both
    primary CTAs. The domain resolves, so this is a real 404, not a blocked request.
-3. **Confirm the postal address.** `Delaware, USA` is a state and country, not a street
+   Nothing else blocks a send.
+2. **Confirm the postal address.** `Delaware, USA` is a state and country, not a street
    address, and may not satisfy CAN-SPAM.
+3. **Run a real-device test.** Everything verified so far is static analysis, DOM
+   measurement and browser rendering — none of which is an email client.
 
 `ASSET_MIGRATION.md` has the detail, including why the hero is a pre-sized file rather
 than a Cloudinary transform.

@@ -1,50 +1,48 @@
 # Asset Migration
 
-**Status: one upload left, and three things to confirm before sending.**
+**Status: all assets live and verified. Three things to confirm before sending.**
 
-Everything else is wired — logo, links, unsubscribe tags, postal address.
+Logo, hero, links, unsubscribe tags and postal address are all wired. Both colour modes
+have been rendered and checked.
 
 ---
 
-## Remaining — upload the hero
+## Hero — live
 
-One file to upload to Cloudinary (`xyiwqpad`), at the root of the Media Library:
+| Property | Value |
+| --- | --- |
+| URL | `https://res.cloudinary.com/xyiwqpad/image/upload/w_536,q_auto:good/v1788190896/diaspora-hero-536x469.png` |
+| Delivered | 536x470, 65 KB, **transparency preserved** |
+| Rendered at | 268x235 — exactly 2x, retina-sharp, aspect matches with no distortion |
 
-| File | Size | Notes |
-| --- | --- | --- |
-| `diaspora-hero-536x469.png` | 87 KB | Three-device mockup, transparent, exactly 2x the 268px render |
+Verified rendering in both colour modes: the phones sit directly on the background with
+**no white block behind them in dark mode**.
 
-Keep the filename exactly as-is — the HTML already points at:
-
-```
-https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-hero-536x469.png
-```
-
-Until it is uploaded that URL returns 404 and the hero will not render.
-
-> ### Why a pre-sized file instead of a Cloudinary transform
+> ### A correction worth recording
 >
-> The first approach was to upload the 1088x952 master and let Cloudinary resize it on
-> delivery with `w_536,q_auto:good`. That gave an excellent filesize (742 KB down to
-> 67 KB) but **silently discarded the alpha channel** — the delivered PNG came back as
-> colourtype 3 with no `tRNS` chunk.
+> An earlier revision of this document claimed that *every* Cloudinary transform on this
+> account flattens the alpha channel. **That was wrong.** It was true of one specific
+> asset, not of the account.
 >
-> That failure is invisible in light mode, because the flattened background matches the
-> white surface. In **dark mode it renders as a solid block behind the phones** — exactly
-> the kind of bug that only surfaces in Apple Mail on a real device.
+> The original `diaspora-hero-1088x952` upload loses its alpha under
+> `w_536,q_auto:good` — the delivered PNG comes back as colourtype 3 with no `tRNS`
+> chunk. The re-uploaded `diaspora-hero-536x469` survives the *same* transform with
+> transparency intact. Both are stored as RGBA masters, and the URL form (with or
+> without the `.png` extension) makes no difference. Something about how the first file
+> was ingested is the cause.
 >
-> Every transform variant on this account flattens it (`w_536` alone, `q_100`,
-> `fl_preserve_transparency`), and `f_png32` returns HTTP 400. The uploaded master is
-> confirmed correct (RGBA, alpha intact), so this is a delivery-side limitation rather
-> than a bad upload.
+> Practical consequences:
 >
-> The fix is to skip transforms and upload a file that is already the right size.
-> `diaspora-hero-536x469.png` was resized with ffmpeg (Lanczos) and quantised to a
-> 256-colour palette **with transparency preserved** — 87 KB, indistinguishable at the
-> 268px render size.
+> - The transform is fine to use — 730 KB down to 65 KB, alpha intact.
+> - Do not reuse the `diaspora-hero-1088x952` asset. It is the one that flattens.
+> - **The generalisable rule stands:** after putting a transparent PNG through a CDN
+>   transform, download the delivered file and confirm it still has an alpha channel or
+>   a `tRNS` chunk. Do not assume, and do not trust a light-mode preview — a flattened
+>   background is invisible against a white surface and only shows up in dark mode.
 >
-> **Takeaway for future templates:** when a transparent PNG passes through a CDN
-> transform, verify the delivered file still has alpha. Do not assume it survives.
+> Note the URL includes the version segment (`v1788190896`). For this asset the
+> extensionless and versioned forms resolve, but `/diaspora-hero-536x469.png` without a
+> version returns 404 — so keep the version in place.
 
 ---
 
@@ -230,7 +228,7 @@ To change the light tint, edit the hex after `co_rgb:`.
 | Outer page background | No dark override — a light gutter framed the dark email | `.bg-outer` added (dark `#1A0550`) |
 | Hero column widths | Declared `280 + 312 = 592px` inside a real 544px content box | `260 + 284 = 544` |
 | Logo aspect ratio | Assumed 5.5:1 with no asset to measure — would have squashed the artwork | Measured from the real file (5.28:1); six render sizes set to match |
-| Hero via CDN transform | `q_auto` silently stripped the alpha channel — white block in dark mode | Pre-sized 536x469 file with transparency preserved |
+| Hero source | 272x297 rendered at 268px — effectively 1x, soft on every retina screen | Re-exported from Figma; delivered 536x470 at 65 KB, exactly 2x, transparency verified |
 | 15 x `href="#"` | Dead links | All wired to real destinations |
 | No postal address | CAN-SPAM exposure | Address line added (see compliance note) |
 | Hardcoded recipient address | A real email address was baked into the footer instead of a merge token, and had been published to this repo | Replaced with `{{email}}`, and scrubbed from git history |
