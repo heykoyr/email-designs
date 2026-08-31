@@ -1,24 +1,38 @@
-# Diaspora Email
+# Email Designs
 
-## Architecture
-One HTML document contains one copy of each campaign section. Responsive table-based layout is used to move the same content from desktop to the mobile proportions shown by the supplied Figma states.
+Production HTML email templates — hand-built, table-based, and tested for
+cross-client rendering. Each template lives in its own folder with its own README
+and asset inventory.
 
-## Responsive states
-Desktop is based on the 640px Figma composition. At <=600px, the hero becomes vertically oriented, feature cards remain in a 2-column grid, and the How It Works / Campaign Details sections follow the supplied mobile arrangement.
+## Templates
 
-## Light/dark
-Light-mode colors are inline. A `prefers-color-scheme: dark` block provides the approved dark palette for clients that support the media query. Gmail may still apply its own dark-mode transformations in some contexts, so final client QA is required.
+| Template | Description | Status |
+| --- | --- | --- |
+| [`diaspora-referral-campaign/`](diaspora-referral-campaign/) | Diaspora referral campaign. One document, four rendering states (Desktop/Mobile × Light/Dark). Built for SendGrid. | Assets pending — see its [ASSET_MIGRATION.md](diaspora-referral-campaign/ASSET_MIGRATION.md) |
 
-## Gmail clipping
-The HTML avoids duplicated desktop/mobile or light/dark markup, Base64 images, JavaScript, and large inline SVG blobs. The document is intended to remain comfortably below Gmail's practical clipping threshold, but exact clipping behavior still depends on final template wrapping and transport.
+## House rules
 
-## Assets
-Raster images are referenced by HTTPS URLs. Replace any unresolved Diaspora-hosted URLs in `ASSET_MIGRATION.md` before production.
+Every template in this repository follows the same engineering constraints:
 
-## SendGrid
-Paste the complete HTML into a SendGrid HTML editor/template. No SendGrid-specific personalization variables are invented. Existing unsubscribe/manage-preference links are placeholders unless you map them to your verified SendGrid links.
+- **One document per email.** Content exists once. Breakpoints and colour modes are
+  produced with CSS, never with duplicated markup.
+- **Tables for all critical layout.** No flexbox, CSS grid, JavaScript, absolute
+  positioning, or CSS transforms in the load-bearing structure.
+- **Light mode inline, dark mode layered.** Light colours live in inline attributes so
+  they need zero CSS support; dark mode is added via `prefers-color-scheme` and
+  `[data-ogsc]`/`[data-ogsb]`, and only ever overrides colour.
+- **No Base64.** All images are hosted over HTTPS with explicit `width`/`height`.
+- **Under Gmail's clip threshold.** Gmail truncates past roughly 102 KB; templates aim
+  to stay well beneath it.
+- **Unresolved values fail loudly.** Placeholders use the reserved host
+  `TODO-REPLACE.invalid` (RFC 2606), so a missed one breaks visibly instead of
+  silently pointing somewhere real. Find them with
+  `grep -rn "TODO-REPLACE" .`
 
-## Known limitations
-Actual Gmail iOS, Gmail Android, Apple Mail, and Outlook client rendering was not executed in this environment. Browser preview is not equivalent to device-client testing.
+## Using a template
 
-HTML optimization can improve technical quality and reduce potential deliverability issues, but Inbox vs Spam placement also depends on SendGrid/domain authentication, SPF, DKIM, DMARC, sender reputation, sending IP reputation, recipient engagement, complaint rate, list quality and other factors.
+1. Open the template folder's `README.md` for its architecture and client notes.
+2. Work through its `ASSET_MIGRATION.md` to replace every placeholder.
+3. Verify no placeholders remain: `grep -rn "TODO-REPLACE" .`
+4. Test in a real email client — Litmus, Email on Acid, or a live seed send. A browser
+   preview is not an email client.
