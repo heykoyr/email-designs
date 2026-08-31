@@ -2,8 +2,9 @@
 
 Everything still needed to make `Diaspora_Email.html` sendable, in the order to do it.
 
-**Roughly 20 minutes.** Three files to upload, then a series of find-and-replace edits.
-Nothing here requires design work — the artwork has already been exported from Figma.
+**Roughly 15 minutes.** The logo is already live. One file left to upload, then a series
+of find-and-replace edits. Nothing here requires design work — the artwork has already
+been exported from Figma.
 
 Every unfinished value in the HTML uses the host `TODO-REPLACE.invalid`. That domain is
 reserved by RFC 2606 and can never resolve, so anything you miss breaks visibly instead
@@ -15,60 +16,43 @@ left.
 
 ---
 
-## Step 1 — Upload three images to Cloudinary
+## Step 1 — ✅ Logo (already done)
 
-You were given three files. Upload all three to the **same Cloudinary account already
-serving this email** (cloud name `xyiwqpad`), into the root of your Media Library.
+Both lockups are uploaded and wired in. Nothing left to do here — recorded for reference:
 
-| File | What it is |
+| Mode | URL |
 | --- | --- |
-| `diaspora-logo-lockup-light-568x133.png` | Logo lockup, dark-purple — for light mode |
-| `diaspora-logo-lockup-dark-568x133.png` | Logo lockup, white — for dark mode |
-| `diaspora-hero-1088x952.png` | Three-device mockup, sharp — replaces the blurry 272px one |
+| Light | `https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-light-264x48.png` |
+| Dark | `https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-dark-264x48.png` |
 
-All three came straight out of the Figma file, at 4× with transparent backgrounds.
+Both verified HTTP 200. The actual files are **264×50** (ratio 5.28:1) — a tighter crop
+than the Figma node bounds, with transparency intact.
 
-**Keep the filenames exactly as they are.** Cloudinary turns the filename into the
-public ID, and every URL below assumes these names. If Cloudinary appends a random
-suffix (it does this when "Unique filename" is on), turn that setting off or rename the
-asset afterwards.
+> **The render dimensions follow the asset, and they must stay in sync.** The HTML
+> declares 132×25 in the header and 106×20 in the footer (111×21 / 90×17 on mobile) —
+> all matching 5.28:1, with the header at exactly 2× the source for retina sharpness.
+>
+> If you ever re-upload the lockup with a different crop, **recalculate these six
+> numbers**. An `<img>` whose `width`/`height` ratio disagrees with the file will squash
+> or stretch the artwork — email clients honour the attributes, they do not letterbox.
 
-> **Why no version number in the URLs below?** Cloudinary's `/v1234567890/` segment is
-> optional. Leaving it out makes the URLs predictable, so you can paste them without
-> copying anything out of the dashboard. The one trade-off: if you ever re-upload a file
-> under the same name, add the version segment to bust the CDN cache.
+> **Why the URLs have no version number.** Cloudinary's `/v1234567890/` segment is
+> optional, which keeps URLs predictable. The trade-off: if you re-upload under the same
+> filename, add the version segment to bust the CDN cache, or the old image will persist.
 
 ---
 
-## Step 2 — Point the logo at your uploads
+## Step 2 — Upload the hero
 
-Open `Diaspora_Email.html` and run two find-and-replace-**all** operations.
+One file left to upload, to the same Cloudinary account (`xyiwqpad`):
 
-**Replace 1** — light logo (2 occurrences: header and footer)
+| File | What it is |
+| --- | --- |
+| `diaspora-hero-1088x952.png` | Three-device mockup, sharp — replaces the blurry 272px one |
 
-Find:
-```
-https://TODO-REPLACE.invalid/diaspora-logo-lockup-light-568x133.png
-```
-Replace with:
-```
-https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-light-568x133.png
-```
-
-**Replace 2** — dark logo (2 occurrences)
-
-Find:
-```
-https://TODO-REPLACE.invalid/diaspora-logo-lockup-dark-568x133.png
-```
-Replace with:
-```
-https://res.cloudinary.com/xyiwqpad/image/upload/diaspora-logo-lockup-dark-568x133.png
-```
-
-That is the whole logo fix. Do **not** change the `width`/`height` attributes — they are
-already set to the lockup's true 4.27:1 ratio (141×33 header, 107×25 footer, and 120×28
-/ 90×21 on mobile). Changing one without the other will squash the logo.
+Exported from Figma at 4× with a transparent background. Keep the filename as-is —
+Cloudinary turns it into the public ID and Step 3 assumes that name. If Cloudinary
+appends a random suffix ("Unique filename" is on), disable that or rename afterwards.
 
 ---
 
@@ -316,7 +300,7 @@ To change the light tint, edit the hex after `co_rgb:` — no re-upload required
 | `.footer-copy` | No dark override — `#667085` on `#2C0A84` failed contrast | `.txt-footer` added |
 | Outer page background | No dark override — light gutter framed the dark email | `.bg-outer` added (dark `#1A0550`) |
 | Hero column widths | Declared `280 + 312 = 592px` inside a real **544px** content box | `260 + 284 = 544` |
-| Logo aspect ratio | Assumed 5.5:1; the Figma lockup is **4.27:1** — would have squashed the artwork | Corrected against the real export |
+| Logo aspect ratio | Assumed 5.5:1 with no asset to check against — would have squashed the artwork | Measured from the uploaded file (264×50, **5.28:1**) and the six render sizes set to match |
 | 15 × `href="#"` | Dead links | Named `TODO-REPLACE.invalid` placeholders |
 | No postal address | CAN-SPAM exposure | Placeholder line added to the footer |
 | Hardcoded recipient address | A real email address was baked into the footer instead of a merge token, and had been published to this repo | Replaced with `{{email}}`; the address is redacted here deliberately so this document does not reintroduce it |

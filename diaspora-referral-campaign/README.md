@@ -9,9 +9,9 @@ Figma frames (Desktop/Mobile × Light/Dark) as **one** HTML document.
 | `ASSET_MIGRATION.md` | Asset inventory, verification status, and the outstanding to-do list. |
 | `README.md` | This file. |
 
-**Status:** structurally complete and asset-verified. Not yet shippable — the logo
-asset and every link destination are still placeholders. See
-[Before you send](#before-you-send).
+**Status:** structurally complete and asset-verified. Logo is live. Not yet shippable —
+the hero swap, every link destination, and the postal address are still outstanding.
+See [Before you send](#before-you-send).
 
 ---
 
@@ -111,14 +111,15 @@ so a missed placeholder fails loudly instead of silently pointing somewhere real
 grep -n "TODO-REPLACE" Diaspora_Email.html
 ```
 
-1. **Logo lockup** — two hosted images (light + dark), 568×133 for a 141×33 render.
-   Both have already been exported from Figma; they only need uploading.
-2. **Link destinations** — 5 social profiles (×2 locations), Open Diaspora,
+1. ~~**Logo lockup**~~ — done. Both lockups are uploaded and wired in.
+2. **Hero image** — upload the sharp export and repoint the `<img>`; the current source
+   is 272×297, effectively 1×.
+3. **Link destinations** — 5 social profiles (×2 locations), Open Diaspora,
    Start Referring, unsubscribe, manage preferences.
-3. **Postal address** — required by CAN-SPAM and its international equivalents.
+4. **Postal address** — required by CAN-SPAM and its international equivalents.
 
 `ASSET_MIGRATION.md` walks through all of it step by step, in order, with the exact
-find-and-replace strings. Budget about 20 minutes.
+find-and-replace strings. Budget about 15 minutes.
 
 ---
 
