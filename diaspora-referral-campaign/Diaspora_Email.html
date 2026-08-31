@@ -49,26 +49,29 @@
   ul.details-list li { margin:0 0 4px 0; }
 
   /* ============================================================
-     RESPONSIVE COLUMNS (feature cards, how-it-works steps)
+     CARD GRIDS — two tables per section, toggled by breakpoint.
 
-     Mobile-first on purpose: 2-per-row is the DEFAULT and needs no
-     media query at all, because some clients (the Gmail apps in
-     particular) do not reliably apply `display:inline-block` to a
-     <td> once its parent <tr> has been switched to `display:block`.
-     Plain <div>s styled as inline-block columns from the start avoid
-     that failure mode. Desktop widens them via the min-width query
-     below; if that query is ever dropped the safe fallback is two
-     columns everywhere, never one stuck column.
+     This is the ONE place the no-duplication rule is broken, and it is
+     deliberate. A real Gmail Android test showed Gmail runs max-width
+     media queries (the hero centres correctly) but IGNORES
+     `display:inline-block` on <div>s — the reflow the card grids had
+     depended on. Every card dropped onto its own row.
 
-     Outlook desktop (Word engine) ignores inline-block entirely, so
-     each grid is additionally wrapped in an MSO-only ghost table --
-     see the conditional comments in the markup.
+     A table's row grouping is fixed, so 3-across on desktop and
+     2-across on mobile cannot both come from one table without exactly
+     the inline-block reflow that just failed. Two tables is the only
+     way to have both.
+
+     This rests solely on the mechanism the Gmail test PROVED works:
+     a max-width media query plus display:none. With no CSS support at
+     all, the mobile copy stays hidden by its inline display:none and
+     the desktop grid shows — which is also what Outlook gets, via
+     mso-hide:all.
+
+     MAINTENANCE: the six feature cards and four step cards each exist
+     TWICE. Any copy change must be made in both the .grid-desktop and
+     the .grid-mobile table.
   ============================================================ */
-  .col-feature, .col-step { display:inline-block; vertical-align:top; font-size:14px; width:50%; }
-  @media screen and (min-width:601px) {
-    .col-feature { width:33.333% !important; }
-    .col-step { width:25% !important; }
-  }
 
   /* ============================================================
      MOBILE (<=600px) — layout + typography overrides.
@@ -101,9 +104,6 @@
     .feature-title { font-size:14px !important; }
     .feature-body { font-size:12px !important; }
 
-    .col-feature { width:50% !important; }
-    .col-step { width:50% !important; }
-
     .banner-outer-pad { padding:24px 16px !important; border-radius:16px !important; }
     .banner-h2 { font-size:20px !important; }
     .banner-sub { font-size:14px !important; }
@@ -125,6 +125,9 @@
     .detail-cell-pad { padding:16px !important; }
     .detail-title { font-size:13px !important; }
     .detail-body { font-size:12px !important; }
+
+    .grid-desktop { display:none !important; max-height:0 !important; overflow:hidden !important; }
+    .grid-mobile  { display:table !important; max-height:none !important; overflow:visible !important; }
 
     .stack-row { display:block !important; width:100% !important; }
     .stack-cell { display:block !important; width:100% !important; padding-left:0 !important; padding-right:0 !important; }
@@ -325,12 +328,11 @@
                        on the wrapper removes the whitespace gap between items.
                        The MSO ghost table gives Outlook desktop the same 3x2
                        grid, since Word ignores inline-block. -->
-                  <div style="font-size:0;line-height:0;text-align:left;">
-                    <!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="181" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-desktop">
+                    <tr>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 8px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#F72CDF" width="32" height="32" align="center" valign="middle" style="background-color:#F72CDF;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094187/diaspora-email-svg-15.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -340,13 +342,10 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Connect with others who share your values and goals.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="181" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                      </td>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 4px 12px 4px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#44A572" width="32" height="32" align="center" valign="middle" style="background-color:#44A572;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094171/diaspora-email-svg-16.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -356,13 +355,10 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Join communities based on nationality, location, faith, profession and more.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="182" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                      </td>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 0 12px 8px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#F57B17" width="32" height="32" align="center" valign="middle" style="background-color:#F57B17;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094172/diaspora-email-svg-17.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -372,13 +368,12 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Stay informed about stories that matter to you and join the conversation.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr><tr><td width="181" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 8px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#2959EE" width="32" height="32" align="center" valign="middle" style="background-color:#2959EE;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094173/diaspora-email-svg-18.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -388,13 +383,10 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Share your experiences, ask questions, give advice and uplift others.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="181" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                      </td>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 4px 12px 4px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#E72976" width="32" height="32" align="center" valign="middle" style="background-color:#E72976;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094174/diaspora-email-svg-19.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -404,13 +396,10 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Connect directly with friends, matches, and communities.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="182" valign="top"><![endif]-->
-                    <div class="col-feature" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="feature-cell-pad" style="padding:20px;">
+                      </td>
+                      <td width="33.33%" valign="top" style="width:33.33%;padding:0 0 12px 8px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#452DDC" width="32" height="32" align="center" valign="middle" style="background-color:#452DDC;width:32px;height:32px;border-radius:12px;">
                               <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094175/diaspora-email-svg-20.png" width="16" height="16" alt="" style="width:16px;height:16px;">
                             </td></tr></table>
@@ -420,10 +409,95 @@
                             <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Find reliable businesses and services in the diaspora community.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </div>
+                      </td>
+                    </tr>
+                  </table>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-mobile" style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+                    <tr>
+                      <td width="50%" valign="top" style="width:50%;padding:0 6px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#F72CDF" width="32" height="32" align="center" valign="middle" style="background-color:#F72CDF;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094187/diaspora-email-svg-15.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">Matchmaking</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Connect with others who share your values and goals.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                      <td width="50%" valign="top" style="width:50%;padding:0 0 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#44A572" width="32" height="32" align="center" valign="middle" style="background-color:#44A572;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094171/diaspora-email-svg-16.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">Networking</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Join communities based on nationality, location, faith, profession and more.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" valign="top" style="width:50%;padding:0 6px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#F57B17" width="32" height="32" align="center" valign="middle" style="background-color:#F57B17;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094172/diaspora-email-svg-17.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">News</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Stay informed about stories that matter to you and join the conversation.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                      <td width="50%" valign="top" style="width:50%;padding:0 0 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#2959EE" width="32" height="32" align="center" valign="middle" style="background-color:#2959EE;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094173/diaspora-email-svg-18.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">Community</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Share your experiences, ask questions, give advice and uplift others.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" valign="top" style="width:50%;padding:0 6px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#E72976" width="32" height="32" align="center" valign="middle" style="background-color:#E72976;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094174/diaspora-email-svg-19.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">Messaging</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Connect directly with friends, matches, and communities.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                      <td width="50%" valign="top" style="width:50%;padding:0 0 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="feature-cell-pad" valign="top" style="padding:20px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#452DDC" width="32" height="32" align="center" valign="middle" style="background-color:#452DDC;width:32px;height:32px;border-radius:12px;">
+                              <img src="https://res.cloudinary.com/xyiwqpad/image/upload/v1787094175/diaspora-email-svg-20.png" width="16" height="16" alt="" style="width:16px;height:16px;">
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading feature-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.28px;color:#2C0A84;">Business Discovery</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading feature-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Find reliable businesses and services in the diaspora community.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
                 </td></tr>
               </table>
             </td>
@@ -496,12 +570,11 @@
                   <!-- Four step cards, same inline-block-column technique as the
                        feature grid: 50% default (2x2), widened to 25% (4 across)
                        at >=601px, with an MSO ghost table for Outlook desktop. -->
-                  <div style="font-size:0;line-height:0;text-align:left;">
-                    <!--[if mso]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="136" valign="top"><![endif]-->
-                    <div class="col-step" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="step-cell-pad" style="padding:16px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-desktop">
+                    <tr>
+                      <td width="25%" valign="top" style="width:25%;padding:0 9px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
                               <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">1</span>
                             </td></tr></table>
@@ -511,13 +584,10 @@
                             <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Go to your profile and open the Invite &amp; Earn section.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="136" valign="top"><![endif]-->
-                    <div class="col-step" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="step-cell-pad" style="padding:16px;">
+                      </td>
+                      <td width="25%" valign="top" style="width:25%;padding:0 6px 12px 3px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
                               <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">2</span>
                             </td></tr></table>
@@ -527,13 +597,10 @@
                             <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Find your unique referral link or share code.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="136" valign="top"><![endif]-->
-                    <div class="col-step" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="step-cell-pad" style="padding:16px;">
+                      </td>
+                      <td width="25%" valign="top" style="width:25%;padding:0 3px 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
                               <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">3</span>
                             </td></tr></table>
@@ -543,13 +610,10 @@
                             <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Share it with family and friends everywhere.</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="136" valign="top"><![endif]-->
-                    <div class="col-step" style="display:inline-block;vertical-align:top;font-size:14px;">
-                      <div style="padding:0 6px 12px 6px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
-                          <tr><td class="step-cell-pad" style="padding:16px;">
+                      </td>
+                      <td width="25%" valign="top" style="width:25%;padding:0 0 12px 9px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
                               <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">4</span>
                             </td></tr></table>
@@ -559,10 +623,67 @@
                             <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">When they sign up and complete their profile, it counts!</span>
                           </td></tr>
                         </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </div>
+                      </td>
+                    </tr>
+                  </table>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-mobile" style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+                    <tr>
+                      <td width="50%" valign="top" style="width:50%;padding:0 6px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
+                              <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">1</span>
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading step-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:-0.24px;color:#2C0A84;">Open Diaspora</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Go to your profile and open the Invite &amp; Earn section.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                      <td width="50%" valign="top" style="width:50%;padding:0 0 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
+                              <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">2</span>
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading step-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:-0.24px;color:#2C0A84;">Get your link</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Find your unique referral link or share code.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" valign="top" style="width:50%;padding:0 6px 12px 0;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
+                              <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">3</span>
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading step-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:-0.24px;color:#2C0A84;">Share it</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">Share it with family and friends everywhere.</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                      <td width="50%" valign="top" style="width:50%;padding:0 0 12px 6px;">
+                        <table role="presentation" width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" class="bg-card" bgcolor="#F8F6FE" style="background-color:#F8F6FE;border-radius:20px;">
+                          <tr><td class="step-cell-pad" valign="top" style="padding:16px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#5925DC" width="20" height="20" align="center" valign="middle" style="background-color:#5925DC;width:20px;height:20px;border-radius:22px;">
+                              <span style="font-family:'Aeonik',Arial,sans-serif;font-weight:900;font-size:14px;letter-spacing:-0.28px;color:#FFFFFF;">4</span>
+                            </td></tr></table>
+                            <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                            <h3 class="txt-heading step-title" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:-0.24px;color:#2C0A84;">They join</h3>
+                            <div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+                            <span class="txt-heading step-body" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:11px;line-height:1.4;color:#2C0A84;">When they sign up and complete their profile, it counts!</span>
+                          </td></tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
                 </td></tr>
               </table>
             </td>

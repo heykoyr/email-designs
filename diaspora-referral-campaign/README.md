@@ -36,24 +36,35 @@ Layout is table-based throughout. No flexbox, CSS grid, JavaScript, absolute
 positioning, or CSS transforms carry any critical layout. The three-device hero
 mockup is a single flat raster asset — never reconstructed from layered HTML.
 
-### How the responsive columns work
+### How the card grids work
 
-The feature and step grids are `<div>`s styled `display:inline-block`, **not** a
-`<td>`-based grid. That choice is deliberate:
+Desktop keeps the approved Figma layout — **3-across features, 4-across steps**. Mobile
+is **2-across**: 3 rows of 2 features, 2 rows of 2 steps.
 
-- The common `<tr>{display:block}` + `<td>{display:inline-block}` technique is
-  unreliable in the Gmail apps — once the parent row is switched to `display:block`,
-  the cells do not consistently re-flow.
-- These columns are **50% wide by default**, so a client with *zero* media-query
-  support still gets a clean 2-across grid. Desktop widens them to 33.3% (features)
-  and 25% (steps) via `@media (min-width:601px)`.
-- The failure mode is therefore two columns everywhere — never one stuck column, and
-  never a horizontal scrollbar.
-- Outlook desktop (Word engine) ignores `inline-block` entirely, so each grid is
-  additionally wrapped in an **MSO-only ghost table** with explicit pixel widths
-  (181px × 3, 136px × 4). Those widths are derived from the real 544px content box
-  (640 − 24×2 outer padding − 24×2 body padding) and were verified against the
-  rendered DOM.
+This is the **one** place the no-duplication rule is broken, deliberately, and it is the
+exception the brief anticipated. Each section holds two grid tables — a `.grid-desktop`
+and a `.grid-mobile` — toggled at 600px.
+
+The reason is a real Gmail Android test. Gmail **runs `max-width` media queries** (the
+hero centres correctly) but **ignores `display:inline-block` on `<div>`s** — the reflow
+the original single-structure grid depended on. Every card dropped onto its own row.
+
+A table's row grouping is fixed, so 3-across and 2-across cannot both come from one table
+without exactly the inline-block reflow that had just failed. Two tables is the only way
+to have both layouts.
+
+What makes it sound rather than a hack: it depends **only** on the mechanism that same
+test proved Gmail runs — a `max-width` media query plus `display:none`. With no CSS
+support at all, the mobile copy stays hidden by its inline `display:none` and the desktop
+grid shows; Outlook gets the same result via `mso-hide:all`. There is no state where both
+or neither appear.
+
+The costs, stated plainly:
+
+- **The card copy exists twice.** Any text change must be made in both tables. This is
+  called out in a MAINTENANCE note in the HTML.
+- **File size went from ~56 KB to ~72 KB**, or 72% of Gmail's clipping budget — still
+  under, but with materially less headroom than before.
 
 Two sections use `stack-row` / `stack-cell` (`display:block` under 600px) to stack
 from two columns to one: the hero and the campaign-details pair. Source order is
@@ -70,21 +81,34 @@ as colour-only overrides — these rules never touch layout:
 - `[data-ogsc]` / `[data-ogsb]` — the attributes Outlook (Windows and mobile) stamps
   onto elements whose foreground/background it rewrote.
 
-> **The Gmail caveat.** The Gmail apps on iOS and Android support **neither**
-> `prefers-color-scheme` nor `[data-ogsc]`. In Gmail dark mode you get Gmail's own
-> automatic inversion, and there is no way to opt out. This is why light mode is the
-> state that must be correct unconditionally and dark mode is treated as an
-> enhancement — not the other way round.
+> **The Gmail caveat — confirmed by testing, not assumed.** A real Gmail Android test
+> showed Gmail runs `max-width` media queries but **ignores
+> `@media (prefers-color-scheme: dark)` entirely**, including the `color-scheme` meta
+> declarations. It applies its own inversion instead: the dark referral banner came back
+> light, the pale prize cards came back dark, and the white content panel came back
+> neutral grey — none of which are values in this file.
+>
+> Gmail's inversion is also **contrast-driven and size-aware**. Small text (`<h3>`, body
+> copy) is lightened all the way to white, while large text (`<h1>` at 32px, `<h2>` at
+> 20px) is lightened only enough to clear the lower large-text contrast threshold — so
+> `#2C0A84` headings land as light purple rather than white, preserving hue.
+>
+> That colour is computed by Gmail from the light-mode source value. It cannot be
+> overridden from this file: the only lever is the source colour itself, and it is shared
+> with light mode. This is why light mode must be correct unconditionally and dark mode
+> is an enhancement — not the other way round.
 
 ### Gmail clipping
 
 Gmail truncates a message body past roughly **102 KB** and hides the remainder behind
-"View entire message". This file is **~57 KB — about 57% of that budget**, with the
+"View entire message". This file is **~72 KB — about 72% of that budget**, with the
 App Store badges and unsubscribe link comfortably inside it.
 
-Headroom comes from engineering, not from cutting campaign content: no Base64, no
-duplicated desktop/mobile or light/dark markup, no inline SVG blobs, no Figma Dev Mode
-output, and a single shared social-icon set rather than per-mode copies.
+Headroom comes from engineering, not from cutting campaign content: no Base64, no inline
+SVG blobs, no Figma Dev Mode output, and a single shared social-icon set rather than
+per-mode copies. The one exception is the duplicated card grids above, which cost about
+16 KB — that is where most of the remaining budget went, so weigh any further duplication
+carefully.
 
 ### Accessibility
 
