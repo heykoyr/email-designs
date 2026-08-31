@@ -1,17 +1,32 @@
 # Diaspora — Referral Campaign Email
 
-A production HTML email for the Diaspora referral campaign, built from four approved
-Figma frames (Desktop/Mobile × Light/Dark) as **one** HTML document.
+A production HTML email for Diaspora's referral campaign, designed in Figma and built
+as **one** HTML document that renders as four states: Desktop/Mobile × Light/Dark.
 
-| File | Purpose |
-| --- | --- |
-| `Diaspora_Email.html` | The complete email. Paste into SendGrid as-is. |
-| `ASSET_MIGRATION.md` | Asset inventory, verification status, and the outstanding to-do list. |
-| `README.md` | This file. |
+**Diaspora** is a community app for diaspora communities — matchmaking, networking, news,
+community, messaging and business discovery, shipped on iOS and Android. This campaign
+asks existing members to invite people they know: refer 3 for a chance at $300, refer 5
+for a chance at $500.
 
-**Status:** complete and fully wired; all assets live and verified in both colour modes.
-One blocker remains — the referral landing page returns 404. See
-[Before you send](#before-you-send).
+**My role.** I designed the email in Figma from scratch — desktop and mobile, light and
+dark — and built the production HTML, wired the assets and links, tested it, and wrote
+the delivery documentation. The Diaspora brand, the product UI shown in the hero mockup,
+and the app-store badges are Diaspora's.
+
+---
+
+## The four states
+
+![Desktop and mobile, light and dark, rendered from a single HTML document](preview/four-states.png)
+
+Full-length renders: [desktop light](preview/desktop-light.png) ·
+[desktop dark](preview/desktop-dark.png) ·
+[mobile light](preview/mobile-light.png) ·
+[mobile dark](preview/mobile-dark.png)
+
+These are Chrome renders of the source file at 720px and 390px with `prefers-color-scheme`
+emulated. **They are not email-client renders** — see [Testing status](#testing-status)
+for what that does and does not prove.
 
 ---
 
@@ -38,16 +53,19 @@ mockup is a single flat raster asset — never reconstructed from layered HTML.
 
 ### How the card grids work
 
-Desktop keeps the approved Figma layout — **3-across features, 4-across steps**. Mobile
+Desktop keeps the approved layout — **3-across features, 4-across steps**. Mobile
 is **2-across**: 3 rows of 2 features, 2 rows of 2 steps.
 
-This is the **one** place the no-duplication rule is broken, deliberately, and it is the
-exception the brief anticipated. Each section holds two grid tables — a `.grid-desktop`
-and a `.grid-mobile` — toggled at 600px.
+This is the **one** place the no-duplication rule is broken, deliberately. Each section
+holds two grid tables — a `.grid-desktop` and a `.grid-mobile` — toggled at 600px.
 
 The reason is a real Gmail Android test. Gmail **runs `max-width` media queries** (the
 hero centres correctly) but **ignores `display:inline-block` on `<div>`s** — the reflow
 the original single-structure grid depended on. Every card dropped onto its own row.
+
+<!-- If the before/after Gmail Android screenshots are still available, drop them into
+     preview/ and reference them here. They are the strongest evidence in this repo:
+     ![Gmail Android, before and after](preview/gmail-android-before-after.png) -->
 
 A table's row grouping is fixed, so 3-across and 2-across cannot both come from one table
 without exactly the inline-block reflow that had just failed. Two tables is the only way
@@ -112,8 +130,10 @@ carefully.
 
 ### Accessibility
 
-- Real heading semantics: one `<h1>`, five `<h2>`, thirteen `<h3>` — verified in the
-  rendered DOM, not just the source.
+- Real heading semantics: one `<h1>`, five `<h2>`, and **thirteen `<h3>` regions exposed
+  at any given breakpoint**. The source contains 23 `<h3>` because the card grids are
+  duplicated — but the inactive grid is `display:none`, so it is dropped from the
+  accessibility tree rather than announced twice.
 - Every layout table carries `role="presentation"`; the wrapper is
   `role="article"` with `lang="en"`.
 - Decorative icons use `alt=""`. Meaningful images carry descriptive alt text, so the
@@ -125,55 +145,10 @@ carefully.
 
 ---
 
-## Before you send
+## Deviations from the design, and why
 
-Every placeholder is gone — logo, all 15 links, unsubscribe tags and postal address are
-wired. Three things remain:
-
-1. **`https://diaspora.mobi/referral` returns 404** — and it is the destination for both
-   primary CTAs. The domain resolves, so this is a real 404, not a blocked request.
-   Nothing else blocks a send.
-2. **Confirm the postal address.** `Delaware, USA` is a state and country, not a street
-   address, and may not satisfy CAN-SPAM.
-3. **Run a real-device test.** Everything verified so far is static analysis, DOM
-   measurement and browser rendering — none of which is an email client.
-
-`ASSET_MIGRATION.md` has the detail, including why the hero is a pre-sized file rather
-than a Cloudinary transform.
-
----
-
-## SendGrid
-
-Paste the complete file into a SendGrid HTML/Code editor. It contains no JavaScript,
-no external stylesheet, and no invented template syntax.
-
-**Recipient address.** The footer uses `{{email}}`, which resolves in a v3 **dynamic
-template** when `email` is present in `dynamic_template_data`. If you send through
-**Marketing Campaigns** instead, swap it for that editor's own insert-field token.
-Confirm against SendGrid's current documentation for whichever sending mode you use —
-an unresolved token renders as empty text, not as an error.
-
-**Unsubscribe.** Do not hand-roll this. Wire the two footer links to SendGrid's
-subscription-management tags so suppression is handled for you:
-
-| Purpose | Tag |
-| --- | --- |
-| Unsubscribe from this group | `<%asm_group_unsubscribe_raw_url%>` |
-| Manage preferences | `<%asm_preferences_raw_url%>` |
-| Global unsubscribe | `<%asm_global_unsubscribe_raw_url%>` |
-
-Verify these against SendGrid's docs for your account's sending mode before launch.
-
-**One-click unsubscribe.** Gmail and Yahoo require bulk senders to support RFC 8058
-one-click unsubscribe. That is a `List-Unsubscribe` / `List-Unsubscribe-Post` **header**,
-configured at the send level — it cannot be set from this HTML file.
-
----
-
-## Known deviations from Figma
-
-These are deliberate, and each is a cross-client reliability trade:
+Each of these is a place where I gave up something from my own Figma design in exchange
+for cross-client reliability.
 
 1. **Top gradient fade.** The frames fade the outer canvas tone into the content
    surface over roughly the top 12% of the body. Reproduced as a flat surface colour —
@@ -213,21 +188,69 @@ These are deliberate, and each is a cross-client reliability trade:
 Verified in this repository:
 
 - HTML parses with no unclosed, stray, or mismatched tags; no duplicate IDs; MSO
-  conditional comments balanced 15/15.
-- All 20 image URLs return **HTTP 200**.
+  conditional comments balanced **3/3**.
+- All **22** image URLs return **HTTP 200**.
 - No Base64, no `<script>`, no external stylesheet, no inline SVG, no Tailwind/React
   remnants, no `href="#"`.
 - Rendered-DOM measurements at 376px and 1000px viewports: **no horizontal overflow**,
   container 640px, features 181px × 3 / 156px × 2, steps 136px × 4 / 156px × 2.
 
-**Not verified — a browser preview is not an email client.** Gmail iOS, Gmail Android,
-Gmail web, Apple Mail and Outlook rendering has **not** been executed. Run this through
-Litmus or Email on Acid, and send a live seed test, before launch. Gmail iOS is the
-primary target for this campaign.
+**Not verified — a browser preview is not an email client.** Gmail web, Apple Mail and
+Outlook rendering has **not** been executed. The Gmail Android findings above come from a
+real device; everything else is static analysis, DOM measurement and browser rendering,
+including the renders at the top of this file. Run this through Litmus or Email on Acid,
+and send a live seed test, before launch. Gmail iOS is the primary target for this
+campaign.
 
 The Apple App Store link could not be reached from the build environment (`apple.com`
 is unreachable there entirely, including its root domain) — it is unverified, not
 known-broken. The Google Play link returns HTTP 200.
+
+---
+
+## Before you send
+
+Every placeholder is gone — logo, all links, unsubscribe tags and postal address are
+wired. Three things remain:
+
+1. **`https://diaspora.mobi/referral` returns 404** — and it is the destination for both
+   primary CTAs. The domain resolves, so this is a real 404, not a blocked request.
+   Nothing else blocks a send.
+2. **Confirm the postal address.** `Delaware, USA` is a state and country, not a street
+   address, and may not satisfy CAN-SPAM.
+3. **Run a real-device test.** See [Testing status](#testing-status) for exactly what has
+   and has not been executed.
+
+[`ASSET_MIGRATION.md`](ASSET_MIGRATION.md) has the detail, including why the hero is a
+pre-sized file rather than a Cloudinary transform.
+
+---
+
+## SendGrid
+
+Paste the complete file into a SendGrid HTML/Code editor. It contains no JavaScript,
+no external stylesheet, and no invented template syntax.
+
+**Recipient address.** The footer uses `{{email}}`, which resolves in a v3 **dynamic
+template** when `email` is present in `dynamic_template_data`. If you send through
+**Marketing Campaigns** instead, swap it for that editor's own insert-field token.
+Confirm against SendGrid's current documentation for whichever sending mode you use —
+an unresolved token renders as empty text, not as an error.
+
+**Unsubscribe.** Do not hand-roll this. Wire the two footer links to SendGrid's
+subscription-management tags so suppression is handled for you:
+
+| Purpose | Tag |
+| --- | --- |
+| Unsubscribe from this group | `<%asm_group_unsubscribe_raw_url%>` |
+| Manage preferences | `<%asm_preferences_raw_url%>` |
+| Global unsubscribe | `<%asm_global_unsubscribe_raw_url%>` |
+
+Verify these against SendGrid's docs for your account's sending mode before launch.
+
+**One-click unsubscribe.** Gmail and Yahoo require bulk senders to support RFC 8058
+one-click unsubscribe. That is a `List-Unsubscribe` / `List-Unsubscribe-Post` **header**,
+configured at the send level — it cannot be set from this HTML file.
 
 ---
 
@@ -237,3 +260,13 @@ HTML optimisation can improve technical quality and reduce potential deliverabil
 issues, but Inbox vs Spam placement also depends on SendGrid/domain authentication,
 SPF, DKIM, DMARC, sender reputation, sending IP reputation, recipient engagement,
 complaint rate, list quality and other factors outside this file.
+
+---
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `Diaspora_Email.html` | The complete email. Paste into SendGrid as-is. |
+| `ASSET_MIGRATION.md` | Asset inventory, verification status, and the outstanding to-do list. |
+| `preview/` | Browser renders of the four states. Not email-client renders. |

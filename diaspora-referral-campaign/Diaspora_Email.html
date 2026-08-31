@@ -322,12 +322,14 @@
                   <span class="txt-heading p-section-sub" style="font-family:'Aeonik',Arial,sans-serif;font-weight:400;font-size:14px;color:#2C0A84;">Everything you need to connect, share, learn and grow - together</span>
                 </td></tr>
                 <tr><td>
-                  <!-- Six feature cards as inline-block columns: 50% wide by
-                       default (2-per-row, needs zero media-query support),
-                       widened to 33.333% (3-per-row) at >=601px. font-size:0
-                       on the wrapper removes the whitespace gap between items.
-                       The MSO ghost table gives Outlook desktop the same 3x2
-                       grid, since Word ignores inline-block. -->
+                  <!-- Six feature cards, 3-across. This table and the
+                       .grid-mobile table beneath it are the ONE deliberate
+                       duplication in this file -- see the CARD GRIDS note in
+                       <head> for the Gmail test that forced it, and for the
+                       maintenance cost. Any client without media-query support
+                       (Outlook included) keeps this grid and never reveals the
+                       mobile one, which stays hidden by its inline
+                       display:none plus mso-hide:all. -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-desktop">
                     <tr>
                       <td width="33.33%" valign="top" style="width:33.33%;padding:0 8px 12px 0;">
@@ -567,9 +569,10 @@
                   <h2 class="txt-heading h2" style="margin:0;font-family:'Aeonik',Arial,sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.4px;color:#2C0A84;">How it works</h2>
                 </td></tr>
                 <tr><td>
-                  <!-- Four step cards, same inline-block-column technique as the
-                       feature grid: 50% default (2x2), widened to 25% (4 across)
-                       at >=601px, with an MSO ghost table for Outlook desktop. -->
+                  <!-- Four step cards, 4-across, paired with the 2x2
+                       .grid-mobile table beneath it on exactly the same
+                       mechanism as the feature grid above. See the CARD GRIDS
+                       note in <head>. -->
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="grid-desktop">
                     <tr>
                       <td width="25%" valign="top" style="width:25%;padding:0 9px 12px 0;">
