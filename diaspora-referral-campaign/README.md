@@ -111,12 +111,14 @@ so a missed placeholder fails loudly instead of silently pointing somewhere real
 grep -n "TODO-REPLACE" Diaspora_Email.html
 ```
 
-1. **Logo lockup** — two hosted images (light + dark), 264×48 for a 132×24 render.
+1. **Logo lockup** — two hosted images (light + dark), 568×133 for a 141×33 render.
+   Both have already been exported from Figma; they only need uploading.
 2. **Link destinations** — 5 social profiles (×2 locations), Open Diaspora,
    Start Referring, unsubscribe, manage preferences.
 3. **Postal address** — required by CAN-SPAM and its international equivalents.
 
-Full detail and export specs are in `ASSET_MIGRATION.md`.
+`ASSET_MIGRATION.md` walks through all of it step by step, in order, with the exact
+find-and-replace strings. Budget about 20 minutes.
 
 ---
 
