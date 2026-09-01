@@ -1,5 +1,7 @@
 # Diaspora — Referral Campaign Email
 
+*One project in [Email Designs](../README.md).*
+
 A production HTML email for Diaspora's referral campaign, designed in Figma and built
 as **one** HTML document that renders as four states: Desktop/Mobile × Light/Dark.
 

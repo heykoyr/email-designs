@@ -1,14 +1,28 @@
 # Email Designs
 
-Production HTML email, designed and built end to end — Figma through to the markup that
-ships. Each project lives in its own folder with its renders, its architecture notes, and
-an honest account of what has and has not been tested.
+A working library of production HTML email — designed in Figma, then built as the markup
+that actually ships.
 
-By [Adekoya Oluwafemi A.](https://github.com/heykoyr), Product Designer.
+Every project here is a real email for a real send. Each one gets its own folder
+containing the design realised as a single HTML document, renders of every state it has
+to survive, an asset inventory, and an honest account of what has and has not been tested
+in a real client.
+
+By [Adekoya Oluwafemi A.](https://heyadkoy.framer.website), Product Designer.
 
 ---
 
-## Diaspora — Referral Campaign
+## Projects
+
+| Project | What it is | Status |
+| --- | --- | --- |
+| [**Diaspora — Referral Campaign**](diaspora-referral-campaign/) | Referral acquisition email for a community app. One document, four rendering states. Built for SendGrid. | Built and verified; awaiting real-client testing and a live landing page |
+
+More will be added here as they are built.
+
+---
+
+## Latest: Diaspora — Referral Campaign
 
 [![Desktop and mobile, light and dark, all rendered from a single HTML document](diaspora-referral-campaign/preview/four-states.png)](diaspora-referral-campaign/)
 
@@ -40,6 +54,8 @@ Three things that project documents rather than glosses over:
 
 ## How these are built
 
+Constraints every project in this repository is held to:
+
 - **One document per email.** Content exists once. Breakpoints and colour modes come from
   CSS, not from duplicated markup. Where that rule is broken it is deliberate, argued,
   and priced.
@@ -57,6 +73,28 @@ Three things that project documents rather than glosses over:
 
 ---
 
-*Client work, shared as a portfolio work sample. The Diaspora brand, product UI and
-app-store assets belong to Diaspora; they are included here only as part of the delivered
-design. All rights reserved.*
+## Folder conventions
+
+Each project folder follows the same shape, so anything here can be picked up without
+context:
+
+```
+<project-name>/
+├── README.md            architecture, design decisions, client notes, testing status
+├── <Name>_Email.html    the complete email — paste into the ESP as-is
+├── ASSET_MIGRATION.md   asset inventory, hosted URLs, verification status, open items
+└── preview/             renders of every state the email has to survive
+```
+
+Placeholders use the reserved host `TODO-REPLACE.invalid` (RFC 2606), so an unresolved
+value breaks visibly instead of silently pointing somewhere real. Find any with:
+
+```bash
+grep -rn "TODO-REPLACE" .
+```
+
+---
+
+*Client work, shared as portfolio work samples. Brand assets, product UI and store badges
+belong to their respective owners and appear here only as part of the delivered design.
+All rights reserved.*
