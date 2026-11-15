@@ -87,10 +87,11 @@ context:
 ```
 
 Placeholders use the reserved host `TODO-REPLACE.invalid` (RFC 2606), so an unresolved
-value breaks visibly instead of silently pointing somewhere real. Find any with:
+value breaks visibly instead of silently pointing somewhere real. Check the actual
+sendable HTML files without matching the placeholder example in this README:
 
 ```bash
-grep -rn "TODO-REPLACE" .
+find . -type f -name '*.html' -exec grep -nH 'TODO-REPLACE' {} +
 ```
 
 ---
