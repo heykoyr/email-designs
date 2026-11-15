@@ -1,9 +1,9 @@
 # Email Designs
 
-A working library of production HTML email — designed in Figma, then built as the markup
-that actually ships.
+A working library of HTML email campaigns, designed in Figma and built as sendable
+markup. Each case study distinguishes verified renders from untested clients and launch status.
 
-Every project here is a real email for a real send. Each one gets its own folder
+Each project targets a real campaign, whether launched or still awaiting final checks. Each one gets its own folder
 containing the design realised as a single HTML document, renders of every state it has
 to survive, an asset inventory, and an honest account of what has and has not been tested
 in a real client.
