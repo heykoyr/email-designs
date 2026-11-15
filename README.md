@@ -52,6 +52,10 @@ Three things that project documents rather than glosses over:
 
 ---
 
+## Reusable checklist for email QA
+
+**[HTML email QA: practical pre-send checklist](docs/email-qa-checklist.md)** covers real-client testing, image delivery, dark mode, links, accessibility, clipping, unsubscribe controls and release evidence. It is a checklist, not a guarantee that this campaign has passed every email client.
+
 ## How these are built
 
 Constraints every project in this repository is held to:
